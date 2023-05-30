@@ -1,0 +1,20 @@
+p {
+    display: inline;
+}
+/* #sec-ayuda {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    
+} */
+
+#form-cine-contacto {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
