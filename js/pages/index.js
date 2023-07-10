@@ -1,3 +1,68 @@
+// Función para agregar películas a favoritos según el código de la película
+function agregarPeliculaPorCodigo() {
+  const movieCodeInput = document.getElementById('movie-code');
+  const movieCode = movieCodeInput.value.trim();
+
+  if (!isNaN(movieCode) && movieCode !== '') {
+    const favoritos = obtenerFavoritos();
+    if (favoritos.includes(movieCode)) {
+      mostrarMensajeAdvertencia('La película ingresada ya se encuentra almacenada');
+    } else {
+      const peliculas = obtenerApi();
+      const pelicula = peliculas.find((pelicula) => pelicula.id === Number(movieCode));
+
+      if (pelicula) {
+        favoritos.push(movieCode);
+        guardarFavoritos(favoritos);
+        mostrarMensajeExito('Película agregada con éxito');
+      } else {
+        mostrarMensajeError('La película seleccionada no se encuentra en la API o se produjo un error al consultar');
+      }
+    }
+  } else {
+    mostrarMensajeError('El código de la película debe ser numérico');
+  }
+
+  movieCodeInput.value = '';
+}
+
+// Función para obtener el array de favoritos del local storage
+function obtenerFavoritos() {
+  const favoritos = localStorage.getItem('FAVORITOS');
+  return favoritos ? JSON.parse(favoritos) : [];
+}
+
+// Función para guardar el array de favoritos en el local storage
+function guardarFavoritos(favoritos) {
+  localStorage.setItem('FAVORITOS', JSON.stringify(favoritos));
+}
+
+// Función para mostrar un mensaje de éxito en la sección de mensajes
+function mostrarMensajeExito(mensaje) {
+  const mensajesSection = document.getElementById('sec-messages');
+  mensajesSection.innerHTML = `<p class="success-message">${mensaje}</p>`;
+}
+
+// Función para mostrar un mensaje de error en la sección de mensajes
+function mostrarMensajeError(mensaje) {
+  const mensajesSection = document.getElementById('sec-messages');
+  mensajesSection.innerHTML = `<p class="error-message">${mensaje}</p>`;
+}
+
+// Función para mostrar un mensaje de advertencia en la sección de mensajes
+function mostrarMensajeAdvertencia(mensaje) {
+  const mensajesSection = document.getElementById('sec-messages');
+  mensajesSection.innerHTML = `<p class="warning-message">${mensaje}</p>`;
+}
+
+// Evento de submit del formulario para agregar una película por código
+const formMovie = document.getElementById('form-movie-new');
+formMovie.addEventListener('submit', function (event) {
+  event.preventDefault();
+  agregarPeliculaPorCodigo();
+});
+
+// Función para mostrar las películas en la página
 async function mostrarPeliculas() {
   const peliculas = await obtenerApi();
   const contenedorPeliculas = document.getElementById('contenedorPeliculas');
@@ -28,82 +93,20 @@ async function mostrarPeliculas() {
     const botonFavoritosElement = document.createElement('button');
     botonFavoritosElement.classList.add('button', 'medium', 'radius');
     botonFavoritosElement.textContent = 'Agregar a favoritos';
+    botonFavoritosElement.addEventListener('click', function () {
+      const favoritos = obtenerFavoritos();
+      if (favoritos.includes(id.toString())) {
+        mostrarMensajeAdvertencia('La película ingresada ya se encuentra almacenada');
+      } else {
+        favoritos.push(id.toString());
+        guardarFavoritos(favoritos);
+        mostrarMensajeExito('Película agregada con éxito');
+      }
+    });
     peliculaElement.appendChild(botonFavoritosElement);
 
     contenedorPeliculas.appendChild(peliculaElement);
   }
 }
-
-
-async function agregarPeliculaFavorita() {
-  const codigoPeliculaInput = document.getElementById('movie-code');
-  const codigoPelicula = parseInt(codigoPeliculaInput.value);
-
-  // Validación: verificar que se haya ingresado un número válido
-  if (isNaN(codigoPelicula)) {
-    mostrarMensajeError("Error: Debes ingresar un valor numérico válido");
-    return;
-  }
-
-  // Obtener las películas favoritas almacenadas en el local storage
-  let peliculasFavoritas = localStorage.getItem('FAVORITOS');
-  peliculasFavoritas = peliculasFavoritas ? JSON.parse(peliculasFavoritas) : [];
-
-  // Validación: verificar que la película no haya sido ingresada previamente
-  if (peliculasFavoritas.includes(codigoPelicula)) {
-    mostrarMensajeAdvertencia("La película ingresada ya se encuentra almacenada");
-    return;
-  }
-
-  // Obtener la información de la película desde la API
-  const apiKey = '3c71e85be68317d81472cba1e7eaa20b';
-  const url = `https://api.themoviedb.org/3/movie/${codigoPelicula}?api_key=${apiKey}&language=es-MX`;
-  
-  try {
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      const pelicula = {
-        codigo: codigoPelicula,
-        titulo: data.title,
-        poster: data.poster_path,
-        originalTitulo: data.original_title,
-        originalIdioma: data.original_language,
-        anio: data.release_date
-      };
-      
-      // Agregar la película a la lista de favoritos
-      peliculasFavoritas.push(pelicula);
-      localStorage.setItem('FAVORITOS', JSON.stringify(peliculasFavoritas));
-      
-      mostrarMensajeExito("Película agregada con éxito");
-    } else {
-      mostrarMensajeError("Error: La película seleccionada no se encuentra en la API o se produjo un error al consultar");
-    }
-  } catch (error) {
-    mostrarMensajeError("Error: Ocurrió un problema al consultar la API");
-  }
-  
-  // Limpiar el campo de entrada
-  codigoPeliculaInput.value = '';
-}
-
-function mostrarMensajeExito(mensaje) {
-  const mensajesSection = document.getElementById('sec-messages');
-  mensajesSection.innerHTML = `<p class="success-message">${mensaje}</p>`;
-}
-
-function mostrarMensajeError(mensaje) {
-  const mensajesSection = document.getElementById('sec-messages');
-  mensajesSection.innerHTML = `<p class="error-message">${mensaje}</p>`;
-}
-
-function mostrarMensajeAdvertencia(mensaje) {
-  const mensajesSection = document.getElementById('sec-messages');
-  mensajesSection.innerHTML = `<p class="warning-message">${mensaje}</p>`;
-}
-
-
-
 
 mostrarPeliculas();

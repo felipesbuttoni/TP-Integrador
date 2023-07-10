@@ -6,7 +6,7 @@
   <title>TUP LC2 - TP Integrador - Cine</title>
   <link rel="shortcut icon" href="img/cinema_popcorn.ico">
   <!-- Estilos CSS -->
-  <link rel="preload" href="css/common.css" />
+  <link rel="preload" href="css/common.css" as="style" />
   <link rel="stylesheet" href="css/common.css" />
   <link rel="stylesheet" href="css/pages/index.css">
   <!-- JavaScript links -->
@@ -36,7 +36,7 @@
     <h2>Últimas Películas en Cartelera</h2>
     <section id="form-movie-new">
       <!--Seccion para agregar una palicula favorita por codigo-->
-      <form onsubmit="event.preventDefault(); agregarPeliculaFavorita();">
+      <form onsubmit="agregarPeliculaFavorita(event);">
         <label for="movie-code">Código de la película:</label><br><br>
         <input type="number" id="movie-code" name="movie-code">
         <button type="submit">Agregar</button>
