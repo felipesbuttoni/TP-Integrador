@@ -1,5 +1,6 @@
 // Función para mostrar las películas favoritas en la página de favoritos
 async function mostrarPeliculasFavoritas() {
+  try {
     const favoritos = obtenerFavoritos();
     const contenedorPeliculasFavoritas = document.getElementById('contenedorPeliculasFavoritas');
   
@@ -21,6 +22,9 @@ async function mostrarPeliculasFavoritas() {
           break;
         }
       }
+    } } catch (error) {
+        mostrarMensajeError('Se produjo un error al obtener las películas de la API');
+   
     }
 
   }
@@ -34,7 +38,7 @@ async function mostrarPeliculasFavoritas() {
       const data = await response.json();
       return data;
     } catch (error) {
-      return null;
+      mostrarMensajeError('Se produjo un error al obtener las películas de la API');
     }
   }
   
