@@ -5,6 +5,7 @@ async function mostrarPeliculasFavoritas() {
   
     if (favoritos.length === 0) {
       const mensajeElement = document.createElement('p');
+      mensajeElement.classList.add("warning-message")
       mensajeElement.textContent = 'No tiene películas seleccionadas en sus favoritos';
       contenedorPeliculasFavoritas.appendChild(mensajeElement);
     } else {
@@ -21,6 +22,7 @@ async function mostrarPeliculasFavoritas() {
         }
       }
     }
+
   }
   
   // Función para obtener el detalle de una película desde la API
@@ -54,6 +56,7 @@ async function mostrarPeliculasFavoritas() {
     peliculaElement.appendChild(tituloElement);
   
     const infoElement = document.createElement('p');
+    infoElement.classList.add("parrafo-pelicula")
     infoElement.innerHTML = `<b>Código:</b> ${id}<br>
       <b>Título original:</b> ${original_title}<br>
       <b>Idioma original:</b> ${original_language}<br>
@@ -71,17 +74,18 @@ async function mostrarPeliculasFavoritas() {
   
     return peliculaElement;
   }
+
   
   // Función para quitar una película de la lista de favoritos
-  function quitarPeliculaFavorita(id) {
-    const favoritos = obtenerFavoritos();
+  async function quitarPeliculaFavorita(id) {
+    const favoritos = await obtenerFavoritos();
     const indice = favoritos.indexOf(id.toString());
     if (indice !== -1) {
       favoritos.splice(indice, 1);
       guardarFavoritos(favoritos);
       mostrarMensajeExito('Película eliminada de favoritos');
+      
+      
     }
   }
-  
 mostrarPeliculasFavoritas();
-  

@@ -25,10 +25,18 @@ h2 {
 
 #form-cine_contacto input,
 #form-cine_contacto textarea {
-
-    width: 100%;
+    width: 350px;
+    max-width: 350px;
+    min-width: 350px;
+    max-height: 400px;
     padding: 5px;
     margin-bottom: 10px;
+}
+
+#form-cine_contacto .button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 #form-cine_contacto button {
@@ -42,11 +50,6 @@ h2 {
     font-weight: bold;
     transition: .3s ease all;
     margin: 3px;
-}
-
-.button-container {
-    display: flex;
-    justify-content: flex-start;
 }
 
 #form-cine_contacto button:hover {
